@@ -1,14 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const BASE_URL = 'http://127.0.0.1:5000'; // Base URL for Flask server
 
+    const playerNameInput = document.getElementById("player-name"); // Define playerNameInput here
     const joinBtn = document.getElementById("join-btn");
     const placeBetBtn = document.getElementById("place-bet-btn");
     const revealOutcomeBtn = document.getElementById("reveal-outcome-btn");
     const activatePowerUpBtn = document.getElementById("activate-power-up-btn");
     const getLeaderboardBtn = document.getElementById("get-leaderboard-btn");
-    const roundDetailsDiv = document.getElementById("round-details");
     const leaderboardDiv = document.getElementById("leaderboard");
-    const playerNameInput = document.getElementById("player-name");
     const betAmountInput = document.getElementById("bet-amount");
     const answerInput = document.getElementById("answer");
     const powerUpInput = document.getElementById("power-up");
