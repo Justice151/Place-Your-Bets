@@ -1,80 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
     const BASE_URL = 'http://192.168.214.217:5000'; // Base URL for Flask server
 
-    const playerNameInput = document.getElementById("player-name"); // Define playerNameInput here
     const joinBtn = document.getElementById("join-btn");
+    const startBtn = document.getElementById("start-btn");
     const placeBetBtn = document.getElementById("place-bet-btn");
     const revealOutcomeBtn = document.getElementById("reveal-outcome-btn");
     const activatePowerUpBtn = document.getElementById("activate-power-up-btn");
     const getLeaderboardBtn = document.getElementById("get-leaderboard-btn");
-    const leaderboardDiv = document.getElementById("leaderboard");
-    const betAmountInput = document.getElementById("bet-amount");
-    const answerInput = document.getElementById("answer");
-    const powerUpInput = document.getElementById("power-up");
+    const outputDiv = document.getElementById("output");
 
     joinBtn.addEventListener("click", async () => {
-        const playerName = playerNameInput.value.trim();
-        if (playerName !== "") {
-            const response = await postData(`${BASE_URL}/join`, { name: playerName });
-            alert(response.message);
-            playerNameInput.disabled = true;
-            joinBtn.disabled = true;
-            placeBetBtn.disabled = false;
-        } else {
-            alert("Please enter your name.");
-        }
+        const response = await postData(`${BASE_URL}/join`, { name: 'Player' });
+        outputDiv.innerText = JSON.stringify(response);
+    });
+
+    startBtn.addEventListener("click", async () => {
+        const response = await fetch(`${BASE_URL}/start`);
+        const data = await response.json();
+        outputDiv.innerText = JSON.stringify(data);
     });
 
     placeBetBtn.addEventListener("click", async () => {
-        const betAmount = betAmountInput.value.trim();
-        if (betAmount !== "") {
-            const response = await postData(`${BASE_URL}/place_bet`, { name: playerNameInput.value.trim(), bet: parseInt(betAmount) });
-            alert(response.message);
-            betAmountInput.disabled = true;
-            placeBetBtn.disabled = true;
-            revealOutcomeBtn.disabled = false;
-        } else {
-            alert("Please enter bet amount.");
-        }
+        const response = await postData(`${BASE_URL}/place_bet`, { name: 'Player', bet: 10 });
+        outputDiv.innerText = JSON.stringify(response);
     });
 
     revealOutcomeBtn.addEventListener("click", async () => {
-        const answer = answerInput.value.trim();
-        if (answer !== "") {
-            const response = await postData(`${BASE_URL}/reveal_outcome`, { answer });
-            alert(`Correct Answer: ${response.correct_answer}`);
-            leaderboardDiv.innerHTML = ""; // Clear leaderboard
-            response.players.forEach(player => {
-                leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
-            });
-            answerInput.disabled = true;
-            revealOutcomeBtn.disabled = true;
-            activatePowerUpBtn.disabled = false;
-        } else {
-            alert("Please enter answer.");
-        }
+        const response = await postData(`${BASE_URL}/reveal_outcome`, { answer: 'Paris' });
+        outputDiv.innerText = JSON.stringify(response);
     });
 
     activatePowerUpBtn.addEventListener("click", async () => {
-        const powerUp = powerUpInput.value.trim();
-        if (powerUp !== "") {
-            const response = await postData(`${BASE_URL}/activate_power_up`, { power_up: powerUp });
-            alert(response.message);
-            activatePowerUpBtn.disabled = true;
-            getLeaderboardBtn.disabled = false;
-        } else {
-            alert("Please enter power-up name.");
-        }
+        const response = await postData(`${BASE_URL}/activate_power_up`, { power_up: 'Extra Life' });
+        outputDiv.innerText = JSON.stringify(response);
     });
 
     getLeaderboardBtn.addEventListener("click", async () => {
         const response = await fetch(`${BASE_URL}/leaderboard`);
         const data = await response.json();
-        leaderboardDiv.innerHTML = ""; // Clear leaderboard
-        data.leaderboard.forEach(player => {
-            leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
-        });
-        getLeaderboardBtn.disabled = true;
+        outputDiv.innerText = JSON.stringify(data);
     });
 
     async function postData(url = '', data = {}) {
