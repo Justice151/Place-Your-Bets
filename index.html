@@ -3,34 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Your Bets</title>
+    <title>Game Management</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Place Your Bets</h1>
+    <header>
+        <h1>Game Management</h1>
+    </header>
 
-    <!-- Display the generated game code -->
-    <div id="game-code">
-        <h2>Game Code: <span id="game-code-value">{{ game_code }}</span></h2>
-    </div>
-    
-    <!-- Interface elements -->
-    <div id="player-info">
-        <label for="player-name">Enter your name:</label>
-        <input type="text" id="player-name" name="player-name">
-        <button id="join-btn">Join Game</button>
-    </div>
-    
-    <div id="round-info">
-        <button id="start-btn">Start Round</button>
-        <button id="place-bet-btn">Place Bet</button>
-        <button id="reveal-outcome-btn">Reveal Outcome</button>
-        <button id="activate-power-up-btn">Activate Power Up</button>
-        <button id="get-leaderboard-btn">Get Leaderboard</button>
-    </div>
-    
-    <div id="output"></div>
+    <main>
+        <section id="join">
+            <h2>Join Game</h2>
+            <input type="text" id="playerName" placeholder="Enter your name">
+            <button onclick="joinGame()">Join</button>
+            <p id="joinMessage"></p>
+        </section>
 
-    <script src="script.js"></script>
+        <section id="startRound">
+            <h2>Start Round</h2>
+            <button onclick="startRound()">Start</button>
+            <p id="roundMessage"></p>
+        </section>
+
+        <section id="placeBet">
+            <h2>Place Bet</h2>
+            <input type="number" id="betAmount" placeholder="Enter bet amount">
+            <button onclick="placeBet()">Place Bet</button>
+            <p id="betMessage"></p>
+        </section>
+
+        <section id="revealOutcome">
+            <h2>Reveal Outcome</h2>
+            <input type="text" id="answer" placeholder="Enter answer">
+            <button onclick="revealOutcome()">Reveal</button>
+            <p id="outcomeMessage"></p>
+        </section>
+
+        <section id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboardList"></ul>
+        </section>
+    </main>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
