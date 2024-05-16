@@ -4,39 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Your Bets</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="player-info">
-        <label for="player-name">Player Name:</label>
-        <input type="text" id="player-name" required>
-        <button id="join-btn">Join Game</button>
-    </div>
-    <div id="round-details">
-        <!-- Round details will be displayed here -->
-    </div>
-    <div id="bet-section">
-        <label for="bet-amount">Bet Amount:</label>
-        <input type="number" id="bet-amount" min="1" required>
-        <button id="place-bet-btn" disabled>Place Bet</button>
-    </div>
-    <div id="answer-section">
-        <label for="answer">Answer:</label>
-        <input type="text" id="answer" required>
-        <button id="reveal-outcome-btn" disabled>Reveal Outcome</button>
-    </div>
-    <div id="power-up-section">
-        <label for="power-up">Power-up:</label>
-        <input type="text" id="power-up" required>
-        <button id="activate-power-up-btn" disabled>Activate Power-up</button>
-    </div>
-    <div id="leaderboard-section">
-        <button id="get-leaderboard-btn">Get Leaderboard</button>
-        <div id="leaderboard">
-            <!-- Leaderboard will be displayed here -->
-        </div>
-    </div>
+    <h1>Place Your Bets</h1>
+    
+    <!-- Interface elements -->
+    <button onclick="joinGame()">Join Game</button>
+    <button onclick="startRound()">Start Round</button>
+    <button onclick="placeBet()">Place Bet</button>
+    <button onclick="revealOutcome()">Reveal Outcome</button>
+    <button onclick="activatePowerUp()">Activate Power Up</button>
+    <button onclick="getLeaderboard()">Get Leaderboard</button>
+    
+    <div id="output"></div>
 
-    <script src="script.js"></script>
+    <script>
+        // Function to send a request to join the game
+        function joinGame() {
+            fetch('http://192.168.214.217:5000/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: 'Player' }) // Replace 'Player' with the desired player name
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Function to start a new round
+        function startRound() {
+            fetch('http://192.168.214.217:5000/start', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Function to place a bet
+        function placeBet() {
+            fetch('http://192.168.214.217:5000/place_bet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: 'Player', bet: 10 }) // Replace 'Player' with the player name and 10 with the bet amount
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Function to reveal the outcome
+        function revealOutcome() {
+            fetch('http://192.168.214.217:5000/reveal_outcome', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ answer: 'Paris' }) // Replace 'Paris' with the answer
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Function to activate a power-up
+        function activatePowerUp() {
+            fetch('http://192.168.214.217:5000/activate_power_up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ power_up: 'Extra Life' }) // Replace 'Extra Life' with the power-up name
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        // Function to get the leaderboard
+        function getLeaderboard() {
+            fetch('http://192.168.214.217:5000/leaderboard', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerText = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
