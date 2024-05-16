@@ -1,9 +1,7 @@
-// script.js
 document.addEventListener("DOMContentLoaded", () => {
     const BASE_URL = 'http://127.0.0.1:5000'; // Base URL for Flask server
 
     const joinBtn = document.getElementById("join-btn");
-    const startRoundBtn = document.getElementById("start-round-btn");
     const placeBetBtn = document.getElementById("place-bet-btn");
     const revealOutcomeBtn = document.getElementById("reveal-outcome-btn");
     const activatePowerUpBtn = document.getElementById("activate-power-up-btn");
@@ -12,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const leaderboardDiv = document.getElementById("leaderboard");
     const playerNameInput = document.getElementById("player-name");
     const betAmountInput = document.getElementById("bet-amount");
+    const answerInput = document.getElementById("answer");
+    const powerUpInput = document.getElementById("power-up");
 
     joinBtn.addEventListener("click", async () => {
         const playerName = playerNameInput.value.trim();
@@ -20,70 +20,65 @@ document.addEventListener("DOMContentLoaded", () => {
             alert(response.message);
             playerNameInput.disabled = true;
             joinBtn.disabled = true;
-            startRoundBtn.disabled = false;
+            placeBetBtn.disabled = false;
         } else {
             alert("Please enter your name.");
         }
     });
 
-    startRoundBtn.addEventListener("click", async () => {
-        const response = await getData(`${BASE_URL}/start`);
-        roundDetailsDiv.innerHTML = `<p>Category: ${response.category}</p><p>Question: ${response.question}</p>`;
-        betAmountInput.disabled = false;
-        placeBetBtn.disabled = false;
-    });
-
     placeBetBtn.addEventListener("click", async () => {
-        const playerName = playerNameInput.value.trim();
-        const bet = parseInt(betAmountInput.value);
-        if (!isNaN(bet) && bet > 0) {
-            const response = await postData(`${BASE_URL}/place_bet`, { name: playerName, bet: bet });
+        const betAmount = betAmountInput.value.trim();
+        if (betAmount !== "") {
+            const response = await postData(`${BASE_URL}/place_bet`, { name: playerNameInput.value.trim(), bet: parseInt(betAmount) });
             alert(response.message);
             betAmountInput.disabled = true;
             placeBetBtn.disabled = true;
             revealOutcomeBtn.disabled = false;
         } else {
-            alert("Please enter a valid bet amount.");
+            alert("Please enter bet amount.");
         }
     });
 
     revealOutcomeBtn.addEventListener("click", async () => {
-        const answer = prompt("Enter your answer:");
-        if (answer) {
+        const answer = answerInput.value.trim();
+        if (answer !== "") {
             const response = await postData(`${BASE_URL}/reveal_outcome`, { answer });
-            alert(`Correct Answer: ${response.correct_answer}\nLeaderboard:\n${formatLeaderboard(response.players)}`);
+            alert(`Correct Answer: ${response.correct_answer}`);
+            leaderboardDiv.innerHTML = ""; // Clear leaderboard
+            response.players.forEach(player => {
+                leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
+            });
+            answerInput.disabled = true;
+            revealOutcomeBtn.disabled = true;
             activatePowerUpBtn.disabled = false;
         } else {
-            alert("Please enter an answer.");
+            alert("Please enter answer.");
         }
     });
 
     activatePowerUpBtn.addEventListener("click", async () => {
-        const powerUp = prompt("Enter the power-up to activate:");
-        if (powerUp) {
+        const powerUp = powerUpInput.value.trim();
+        if (powerUp !== "") {
             const response = await postData(`${BASE_URL}/activate_power_up`, { power_up: powerUp });
             alert(response.message);
-            getLeaderboardBtn.click();
+            activatePowerUpBtn.disabled = true;
+            getLeaderboardBtn.disabled = false;
         } else {
-            alert("Please enter a power-up.");
+            alert("Please enter power-up name.");
         }
     });
 
     getLeaderboardBtn.addEventListener("click", async () => {
-        const response = await getData(`${BASE_URL}/leaderboard`);
-        leaderboardDiv.innerHTML = `<h2>Leaderboard</h2>${formatLeaderboard(response.leaderboard)}`;
+        const response = await fetch(`${BASE_URL}/leaderboard`);
+        const data = await response.json();
+        leaderboardDiv.innerHTML = ""; // Clear leaderboard
+        data.leaderboard.forEach(player => {
+            leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
+        });
+        getLeaderboardBtn.disabled = true;
     });
 
-    function formatLeaderboard(players) {
-        return players.map(([name, score]) => `${name}: ${score}`).join('<br>');
-    }
-
-    async function getData(url) {
-        const response = await fetch(url);
-        return await response.json();
-    }
-
-    async function postData(url, data) {
+    async function postData(url = '', data = {}) {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -91,6 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: JSON.stringify(data)
         });
-        return await response.json();
+        return response.json();
     }
 });
