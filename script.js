@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const BASE_URL = 'http://10.100.18.59:5000'; // Base URL for Flask server
+    const BASE_URL = 'https://10.100.18.59:5000'; // Base URL for Flask server
 
     const playerNameInput = document.getElementById("player-name");
     const joinBtn = document.getElementById("join-btn");
@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (playerName !== "") {
             const response = await postData(`${BASE_URL}/join`, { name: playerName });
             alert(response.message);
+            playerNameInput.disabled = true;
+            joinBtn.disabled = true;
+            placeBetBtn.disabled = false;
         } else {
             alert("Please enter your name.");
         }
@@ -27,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (betAmount !== "") {
             const response = await postData(`${BASE_URL}/place_bet`, { name: playerNameInput.value.trim(), bet: parseInt(betAmount) });
             alert(response.message);
+            betAmountInput.disabled = true;
+            placeBetBtn.disabled = true;
+            revealOutcomeBtn.disabled = false;
         } else {
             alert("Please enter bet amount.");
         }
@@ -37,10 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (answer !== "") {
             const response = await postData(`${BASE_URL}/reveal_outcome`, { answer });
             alert(`Correct Answer: ${response.correct_answer}`);
-            leaderboardDiv.innerHTML = ""; // Clear leaderboard
+            leaderboardDiv.innerHTML = "";
             response.players.forEach(player => {
                 leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
             });
+            answerInput.disabled = true;
+            revealOutcomeBtn.disabled = true;
+            activatePowerUpBtn.disabled = false;
         } else {
             alert("Please enter answer.");
         }
@@ -51,6 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (powerUp !== "") {
             const response = await postData(`${BASE_URL}/activate_power_up`, { power_up: powerUp });
             alert(response.message);
+            activatePowerUpBtn.disabled = true;
+            getLeaderboardBtn.disabled = false;
         } else {
             alert("Please enter power-up name.");
         }
@@ -59,10 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
     getLeaderboardBtn.addEventListener("click", async () => {
         const response = await fetch(`${BASE_URL}/leaderboard`);
         const data = await response.json();
-        leaderboardDiv.innerHTML = ""; // Clear leaderboard
+        leaderboardDiv.innerHTML = "";
         data.leaderboard.forEach(player => {
             leaderboardDiv.innerHTML += `<div>${player[0]}: ${player[1].score}</div>`;
         });
+        getLeaderboardBtn.disabled = true;
     });
 
     async function postData(url = '', data = {}) {
