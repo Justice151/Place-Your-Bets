@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,26 +7,36 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-interface">
-        <h1>Place Your Bets</h1>
-        <label for="player-name">Enter your name:</label>
-        <input type="text" id="player-name">
+    <div id="player-info">
+        <label for="player-name">Player Name:</label>
+        <input type="text" id="player-name" required>
         <button id="join-btn">Join Game</button>
-        <div id="round-details">
-            <!-- Round details will be displayed here -->
-        </div>
-        <button id="start-round-btn" disabled>Start Round</button>
-        <label for="bet-amount">Enter your bet:</label>
-        <input type="number" id="bet-amount" min="1" value="1" disabled>
+    </div>
+    <div id="round-details">
+        <!-- Round details will be displayed here -->
+    </div>
+    <div id="bet-section">
+        <label for="bet-amount">Bet Amount:</label>
+        <input type="number" id="bet-amount" min="1" required>
         <button id="place-bet-btn" disabled>Place Bet</button>
+    </div>
+    <div id="answer-section">
+        <label for="answer">Answer:</label>
+        <input type="text" id="answer" required>
         <button id="reveal-outcome-btn" disabled>Reveal Outcome</button>
-        <button id="activate-power-up-btn" disabled>Activate Power-Up</button>
+    </div>
+    <div id="power-up-section">
+        <label for="power-up">Power-up:</label>
+        <input type="text" id="power-up" required>
+        <button id="activate-power-up-btn" disabled>Activate Power-up</button>
+    </div>
+    <div id="leaderboard-section">
         <button id="get-leaderboard-btn">Get Leaderboard</button>
         <div id="leaderboard">
             <!-- Leaderboard will be displayed here -->
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-
