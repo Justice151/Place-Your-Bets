@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const BASE_URL = 'http://192.168.214.217:5000'; // Base URL for Flask server
 
+    const playerNameInput = document.getElementById("player-name");
     const joinBtn = document.getElementById("join-btn");
     const startBtn = document.getElementById("start-btn");
     const placeBetBtn = document.getElementById("place-bet-btn");
@@ -10,8 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const outputDiv = document.getElementById("output");
 
     joinBtn.addEventListener("click", async () => {
-        const response = await postData(`${BASE_URL}/join`, { name: 'Player' });
-        outputDiv.innerText = JSON.stringify(response);
+        const playerName = playerNameInput.value.trim();
+        if (playerName !== "") {
+            const response = await postData(`${BASE_URL}/join`, { name: playerName });
+            outputDiv.innerText = JSON.stringify(response);
+        } else {
+            alert("Please enter your name.");
+        }
     });
 
     startBtn.addEventListener("click", async () => {
