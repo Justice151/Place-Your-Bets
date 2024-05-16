@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const BASE_URL = 'http://192.168.214.217:5000'; // Base URL for Flask server
+    const BASE_URL = 'http://10.100.18.59:5000'; // Base URL for Flask server
 
     const playerNameInput = document.getElementById("player-name");
     const joinBtn = document.getElementById("join-btn");
